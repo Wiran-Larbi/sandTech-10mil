@@ -16,33 +16,40 @@ function App() {
           if (!response.ok || !response.body) {
             throw response.statusText;
           }
+          const flattenArray = (arr) => {
+            return arr.reduce((acc, item) => {
+              if (Array.isArray(item)) {
+                return acc.concat(flattenArray(item));
+              } else {
+                return acc.concat(item);
+              }
+            }, []);
+          }
    
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
-          // console.log(decoder);
-          // const usernames = [];
-   
+          const chunks = [];
           while (true) {
             const { value, done } = await reader.read();
             if (done) {
                 setLoading(false);
+                console.log('Stream complete');
+                const flatten = Array.prototype.flat.call(chunks);
+                console.log(typeof flatten);
+                console.log(flatten);
               break;
             }
-   
             const decodedChunk = decoder.decode(value, { stream: true });
-            
-            // const usernames = decodedChunk
-            //                     .split(/\||\n/)
-            //                     .filter((item) => item !== '' && item !== '\n')
-            //                     .map(element => JSON.parse(element));
-            
-            setData(prevData => [...prevData, decodedChunk]);
-            console.log(decodedChunk);            
+            const array = flattenArray(decodedChunk.split('\n'));
+            // console.log("what : " + typeof array);
+            // chunks.push(array);  
+            console.log(array);          
           }
+          // setData(chunks.split('\n'));
            
         } catch (error) {
-          // Handle other errors
           setLoading(false);
+          setData([]);
         }
       };
    
@@ -62,10 +69,9 @@ function App() {
     <div className="bg-slate-100 w-full h-screen">
       <SideBar onClickElement={handleClickElement} />
       {
-        data
-        &&
+      
+        // (console.log(data))
         <List data={data} />
-       
       }
     </div>
       

@@ -3,14 +3,13 @@ import ListElement from './ListElement';
 
 
 function List({data}) {
-    const [usernames, setUsernames] = useState([]);
     
-    useEffect(() => {
+    // useEffect(() => {
         
-        setUsernames(prev => [...prev,...data]);
+    //     setUsernames(prev => [...prev,...data]);
 
 
-    }, [data]);
+    // }, [data]);
 
     
 
@@ -20,10 +19,10 @@ function List({data}) {
             <div>
                 
                 {
-                    usernames 
+                    data 
                     && 
                     (
-                        console.log(usernames)
+                        console.log(typeof data)
                         // data.map((item, index) => {
                         //     // return <ListElement key={index} data={item} />
                         //     return <span key={index}>${item.username}</span>
